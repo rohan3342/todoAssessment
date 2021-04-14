@@ -1,111 +1,89 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import type {Node} from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+GoogleSignin.configure({
+  iosClientId:
+    '1045411016809-kjlahngbat65kqaj9tojd9nmturj45lu.apps.googleusercontent.com',
+});
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userInfo: {},
+      isUserLoggedIn: false,
+    };
+  }
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      console.log('-------- running ');
+      const userInfo = await GoogleSignin.signIn();
+      console.log('--------');
+      this.setState({ userInfo, isUserLoggedIn: true });
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('SIGN_IN_CANCELLED');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('IN_PROGRESS');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('PLAY_SERVICES_NOT_AVAILABLE');
+      } else {
+        console.log('ELSE Block', error);
+      }
+    }
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+  render() {
+    const { isUserLoggedIn, userInfo } = this.state;
+    return (
+      <View style={styles.container}>
+        {isUserLoggedIn ? (
+          <View style={styles.container}>
+            <Image style={styles.img} source={{ uri: userInfo.user.photo }} />
+            <Text style={styles.text}>Welcome {userInfo.user.givenName}</Text>
+            <Text style={styles.text}>{userInfo.user.email}</Text>
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <GoogleSigninButton
+              style={styles.btn}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={this.signIn}
+            />
+          </View>
+        )}
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
+  text: {
+    fontSize: 30,
+    marginTop: 10,
     fontWeight: '600',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  btn: {
+    marginTop: 30,
+    width: 220,
   },
-  highlight: {
-    fontWeight: '700',
+  img: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
   },
 });
 

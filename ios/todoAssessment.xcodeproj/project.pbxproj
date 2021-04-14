@@ -145,7 +145,6 @@
 				989191B3E9C13A3D4CD7E17C /* Pods-todoAssessment-todoAssessmentTests.debug.xcconfig */,
 				808DD7BE90C5B91777E34EB4 /* Pods-todoAssessment-todoAssessmentTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
