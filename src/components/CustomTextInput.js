@@ -25,6 +25,7 @@ const CustomTextInput = ({
           setInput(text);
           getInput(text);
         }}
+        placeholderTextColor="#aaa"
         placeholder={placeholder}
         style={styles.inputBox}
       />
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 18,
     padding: 10,
+    color: '#000',
   },
 });
 
