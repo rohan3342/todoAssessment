@@ -5,22 +5,40 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  Alert,
 } from 'react-native';
 import CustomTextInput from '../components/CustomTextInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { signUp } from '../services/Login/action';
+import { connect } from 'react-redux';
 
-export default class SignUpScreen extends Component {
+class SignUpScreen extends Component {
   state = {
     username: '',
     password: '',
     email: '',
     rePassword: '',
+    phone: '',
   };
 
   getUserName = text => this.setState({ username: text });
   getPassword = text => this.setState({ password: text });
   getEmail = text => this.setState({ email: text });
   getrePassword = text => this.setState({ rePassword: text });
+  getPhone = text => this.setState({ phone: text });
+
+  signUp = () => {
+    const data = this.state;
+    const callback = message => {
+      console.log(typeof message);
+      if (message === true) {
+        this.props.navigation.navigate('HomeScreen');
+      } else {
+        Alert.alert('Error', message, [{ text: 'Close', style: 'cancel' }]);
+      }
+    };
+    this.props.signUp(data, callback);
+  };
 
   render() {
     return (
@@ -44,6 +62,11 @@ export default class SignUpScreen extends Component {
           getInput={text => this.getUserName(text)}
         />
         <CustomTextInput
+          placeholder="Phone Number"
+          keyboardType="number-pad"
+          getInput={text => this.getPhone(text)}
+        />
+        <CustomTextInput
           placeholder="Password"
           keyboardType="default"
           secureTextEntry={true}
@@ -57,7 +80,7 @@ export default class SignUpScreen extends Component {
           type="password"
           getInput={text => this.getrePassword(text)}
         />
-        <TouchableOpacity style={styles.LoginBtn}>
+        <TouchableOpacity onPress={() => this.signUp()} style={styles.LoginBtn}>
           <Ionicons
             style={styles.LoginBtnIcon}
             name="ios-checkmark"
@@ -127,7 +150,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   termsView: {
-    marginTop: '50%',
+    marginTop: 10,
   },
   termsViewTxt: {
     color: 'grey',
@@ -135,3 +158,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+const mapDispatchToProps = dispatch => ({
+  signUp: (value, callback) => dispatch(signUp(value, callback)),
+});
+
+export default connect(null, mapDispatchToProps)(SignUpScreen);
