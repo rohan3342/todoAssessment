@@ -6,6 +6,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 
+import TwitterButton from './TwitterButton';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 GoogleSignin.configure({
@@ -55,6 +56,7 @@ class App extends React.Component {
         ) : (
           <View style={styles.container}>
             <Icon size={40} name="home" />
+            <TwitterButton style={styles.button} />
             <GoogleSigninButton
               style={styles.btn}
               size={GoogleSigninButton.Size.Wide}
@@ -87,6 +89,9 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 50,
+  },
+  button: {
+    height: 50,
   },
 });
 

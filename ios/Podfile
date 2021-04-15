@@ -6,7 +6,8 @@ platform :ios, '10.0'
 target 'todoAssessment' do
 
   pod 'GoogleSignIn', '~> 5.0.2'
-  
+  pod 'TwitterKit', '~> 3.4.2'
+
   config = use_native_modules!
 
   use_react_native!(
