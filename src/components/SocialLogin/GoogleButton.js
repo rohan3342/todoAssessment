@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 GoogleSignin.configure({
   iosClientId:
@@ -32,7 +34,7 @@ const GoogleLoginButton = () => {
 
   return (
     <TouchableOpacity onPress={signIn} style={styles.container}>
-      <Text>Login</Text>
+      <AntDesign name="googleplus" color="white" size={35} />
     </TouchableOpacity>
   );
 };
@@ -51,16 +53,16 @@ const GoogleLogoutButton = () => {
 
   return (
     <TouchableOpacity onPress={signOut} style={styles.container}>
-      <Text>Logout</Text>
+      <AntDesign name="googleplus" color="white" size={35} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#DB4437',
+    padding: 10,
+    borderRadius: 50,
   },
 });
 
