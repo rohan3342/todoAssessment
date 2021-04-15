@@ -33,7 +33,7 @@ export default class LoginScreen extends Component {
         </View>
         <CustomTextInput
           placeholder="Username or Email Address"
-          keyboardType="email-address"
+          keyboardType="default"
           getInput={text => this.getUserName(text)}
         />
         <CustomTextInput
@@ -66,7 +66,7 @@ export default class LoginScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     backgroundColor: 'white',
   },
   header: {
