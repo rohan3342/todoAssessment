@@ -6,6 +6,8 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 
+import Icon from 'react-native-vector-icons/AntDesign';
+
 GoogleSignin.configure({
   iosClientId:
     '1045411016809-kjlahngbat65kqaj9tojd9nmturj45lu.apps.googleusercontent.com',
@@ -52,6 +54,7 @@ class App extends React.Component {
           </View>
         ) : (
           <View style={styles.container}>
+            <Icon size={40} name="home" />
             <GoogleSigninButton
               style={styles.btn}
               size={GoogleSigninButton.Size.Wide}
