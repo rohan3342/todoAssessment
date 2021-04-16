@@ -23,6 +23,12 @@ class AddNoteScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('MenuScreen')}
+          style={styles.backBtn}>
+          <Ionicons name="chevron-back" size={30} color="#383972" />
+          <Text style={styles.backBtnTxt}>My Notes</Text>
+        </TouchableOpacity>
         <Text style={styles.headerTxtWrapper}>
           <Text>Add </Text>
           <Text style={styles.txtColorBlue}>Notes</Text>
@@ -62,7 +68,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingTop: 30,
   },
+  backBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    position: 'absolute',
+  },
+  backBtnTxt: {
+    fontSize: 16,
+    color: '#383972',
+  },
   headerTxtWrapper: {
+    marginVertical: 20,
     fontSize: 50,
     fontWeight: 'bold',
     color: '#E62D1D',
