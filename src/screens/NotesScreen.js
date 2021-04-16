@@ -51,7 +51,10 @@ class NotesScreen extends Component {
           <Ionicons name="chevron-back" size={30} color="#383972" />
           <Text style={styles.backBtnTxt}>My Notes</Text>
         </TouchableOpacity>
-        <HeaderComp headerTitle={Title} count={Notes.length} />
+        <HeaderComp
+          headerTitle={Title}
+          count={Notes !== undefined ? Notes.length : 0}
+        />
         <View style={styles.flatListView}>
           {this.props.notes !== undefined && (
             <FlatList
