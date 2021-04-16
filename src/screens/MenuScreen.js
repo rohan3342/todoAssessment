@@ -81,9 +81,8 @@ class MenuScreen extends Component {
         </Text>
         <ScrollView>{this.renderCategoriesList()}</ScrollView>
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.menuBtn}>
-            <Ionicons name="menu-outline" size={60} color="#383972" />
-            <Text style={styles.menuBtnTxt}>Menu</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Ionicons name="menu-outline" size={70} color="#383972" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('AddNoteScreen')}>
@@ -142,16 +141,6 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  menuBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuBtnTxt: {
-    marginTop: -10,
-    color: '#e62d1d',
-    letterSpacing: 1.5,
-    fontSize: 12,
   },
 });
 
