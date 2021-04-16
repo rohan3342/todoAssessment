@@ -3,8 +3,10 @@ import {
   AUTH_USER_SOCIAL,
   SIGNUP,
   SIGNUP_SOCIAL,
+  LOGOUT,
 } from './actionType';
 import { URL, USERS, AUTHENTICATE } from '../constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const signUp = (userInfo, callback) => async dispatch => {
   const { username, password, phone } = userInfo;
@@ -110,4 +112,23 @@ export const authUser = (userInfo, callback) => async dispatch => {
   } else {
     callback(message);
   }
+};
+
+export const logOut = () => async dispatch => {
+  if (clearAll()) {
+    dispatch({
+      type: LOGOUT,
+    });
+  }
+};
+
+const clearAll = async () => {
+  try {
+    await AsyncStorage.clear();
+    console.log('LOOOOOOGOOOUUTT!!');
+    return true;
+  } catch (e) {
+    console.log('AsyncStorage: Logout =>', e);
+  }
+  return false;
 };
