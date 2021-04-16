@@ -1,14 +1,12 @@
 import React from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
 
-const NoteCardComp = ({ NoteDate, Data }) => {
+const NoteCardComp = ({ Data }) => {
+  const { createdDate, data } = Data;
   return (
     <View style={styles.container}>
-      <Text style={styles.titleTxt}>Note Date</Text>
-      <Text style={styles.dataTxt}>
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec
-        odio.Quisque volutpat mattis eros.
-      </Text>
+      <Text style={styles.titleTxt}>{Date(createdDate)}</Text>
+      <Text style={styles.dataTxt}>{data}</Text>
     </View>
   );
 };
@@ -19,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '95%',
     backgroundColor: 'white',
-    marginTop: 30,
+    marginBottom: 20,
     padding: 20,
     borderRadius: 10,
     ...Platform.select({

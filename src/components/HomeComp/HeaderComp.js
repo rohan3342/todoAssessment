@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   headerCompView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 20,
   },
   headerTxt: {
     color: '#E62D1D',

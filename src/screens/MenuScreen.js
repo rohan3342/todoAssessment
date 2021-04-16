@@ -34,10 +34,21 @@ class MenuScreen extends Component {
           categories[title] = 1;
         }
       });
+
+    const viewAllNotes = (Title, Count) => {
+      this.props.navigation.navigate('NotesScreen', {
+        Title,
+        Count,
+      });
+    };
+
     return Object.entries(categories).map((item, index) => {
       let last = lastTitle.title === item[0];
       return (
-        <TouchableOpacity style={styles.categoryView} key={index}>
+        <TouchableOpacity
+          onPress={() => viewAllNotes(item[0], item[1])}
+          style={styles.categoryView}
+          key={index}>
           <Text
             style={[
               styles.categoryTitle,
