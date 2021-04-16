@@ -1,11 +1,23 @@
 import React from 'react';
-import { View, Text, Platform, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const NoteCardComp = ({ Data }) => {
-  const { createdDate, data } = Data;
+const NoteCardComp = ({ Data, deleteNote }) => {
+  const { createdDate, data, id } = Data;
   return (
     <View style={styles.container}>
-      <Text style={styles.titleTxt}>{Date(createdDate)}</Text>
+      <View style={styles.dateandCross}>
+        <Text style={styles.titleTxt}>{createdDate}</Text>
+        <TouchableOpacity onPress={() => deleteNote(id)}>
+          <Ionicons name="ios-close" size={30} color="#383972" />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.dataTxt}>{data}</Text>
     </View>
   );
@@ -35,12 +47,17 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  dateandCross: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   titleTxt: {
     fontSize: 14,
     color: '#E62D1D',
   },
   dataTxt: {
-    marginTop: 10,
+    marginTop: 5,
     fontSize: 16,
     color: '#383972',
     textAlign: 'justify',
