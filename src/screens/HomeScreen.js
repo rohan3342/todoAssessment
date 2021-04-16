@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import NoteCardComp from '../components/HomeComp/NoteCardComp';
 import HeaderComp from '../components/HomeComp/HeaderComp';
-
 class HomeScreen extends Component {
   render() {
     return (

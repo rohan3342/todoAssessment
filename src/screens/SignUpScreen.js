@@ -32,7 +32,7 @@ class SignUpScreen extends Component {
     const callback = message => {
       console.log(typeof message);
       if (message === true) {
-        this.props.navigation.navigate('HomeScreen');
+        this.props.navigation.navigate('MenuScreen');
       } else {
         Alert.alert('Error', message, [{ text: 'Close', style: 'cancel' }]);
       }

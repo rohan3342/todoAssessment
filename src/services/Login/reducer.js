@@ -6,21 +6,22 @@ import {
 } from './actionType';
 
 const initialState = {
-  userInfo: [],
   userID: undefined,
-  auth: false,
 };
 
 export default function HomeReducer(state = initialState, action) {
+  // if (action.payload) {
+  //   //Async Storage
+  // }
   switch (action.type) {
     case AUTH_USER:
-      return { ...state, userID: action.payload, auth: true };
+      return { ...state, userID: action.payload };
     case SIGNUP:
-      return { ...state, userID: action.payload, auth: true };
+      return { ...state, userID: action.payload };
     case AUTH_USER_SOCIAL:
-      return { ...state, userID: action.payload, auth: true };
+      return { ...state, userID: action.payload };
     case SIGNUP_SOCIAL:
-      return { ...state, userID: action.payload, auth: true };
+      return { ...state, userID: action.payload };
     default:
       return state;
   }

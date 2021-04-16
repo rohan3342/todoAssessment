@@ -30,10 +30,10 @@ class LoginScreen extends Component {
   socialCallBack = async userInfo => {
     const authUserSocialCallback = AuthStatus => {
       const signUpSocialCallback = SignStatus => {
-        SignStatus && this.props.navigation.navigate('HomeScreen');
+        SignStatus && this.props.navigation.navigate('MenuScreen');
       };
       if (AuthStatus === true) {
-        this.props.navigation.navigate('HomeScreen');
+        this.props.navigation.navigate('MenuScreen');
       } else {
         this.props.signUpSocial(userInfo, signUpSocialCallback);
       }
@@ -46,7 +46,7 @@ class LoginScreen extends Component {
     console.log(userInfo);
     const loginCallBack = message => {
       if (message === true) {
-        this.props.navigation.navigate('HomeScreen');
+        this.props.navigation.navigate('MenuScreen');
       } else {
         Alert.alert('Error', message, [{ text: 'Close', style: 'cancel' }]);
       }
