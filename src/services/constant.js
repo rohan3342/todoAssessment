@@ -1,5 +1,5 @@
 /* API URL */
-const URL = 'https://f9641ab1784a.ngrok.io';
+const URL = 'https://e07e9662f93a.ngrok.io';
 const USERS = '/api/users';
 const AUTHENTICATE = '/api/authenticate';
 const NOTES = '/api/notes/';

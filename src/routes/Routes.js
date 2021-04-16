@@ -13,7 +13,7 @@ const Routes = () => {
       <Stack.Navigator
         keyboardHandlingEnabled
         mode="card"
-        initialRouteName="LoginScreen"
+        initialRouteName="HomeScreen"
         screenOptions={{ headerShown: false }}>
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
