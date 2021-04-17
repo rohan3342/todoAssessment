@@ -22,10 +22,26 @@ class LoginScreen extends Component {
   state = {
     username: '',
     password: '',
+    data: '',
   };
 
   getUserName = text => this.setState({ username: text });
   getPassword = text => this.setState({ password: text });
+
+  validateText = () => {
+    const { username, password } = this.state;
+    if (username === '') {
+      Alert.alert('Empty Username', 'Please Fill the Username');
+    } else if (password === '') {
+      Alert.alert('Empty Password', 'Please Fill the Password');
+    } else {
+      this.Login();
+      this.setState({
+        username: '',
+        password: '',
+      });
+    }
+  };
 
   socialCallBack = async userInfo => {
     const authUserSocialCallback = AuthStatus => {
@@ -81,7 +97,9 @@ class LoginScreen extends Component {
           type="password"
           getInput={text => this.getPassword(text)}
         />
-        <TouchableOpacity onPress={() => this.Login()} style={styles.LoginBtn}>
+        <TouchableOpacity
+          onPress={() => this.validateText()}
+          style={styles.LoginBtn}>
           <Ionicons
             style={styles.LoginBtnIcon}
             name="ios-checkmark"
