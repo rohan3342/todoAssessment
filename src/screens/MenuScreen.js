@@ -3,29 +3,27 @@ import {
   View,
   StyleSheet,
   Text,
-  ScrollView,
+  RefreshControl,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { getAllNotes } from '../services/Home/action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class MenuScreen extends Component {
+  state = { refershing: false, test: false };
   componentDidUpdate(prevProps) {
     if (prevProps.userID !== this.props.userID) {
-      this.props.getAllNotes(this.props.userID);
+      this.getData();
     }
-    // if (prevProps.notes !== this.props.notes) {
-    //   console.log('Menu Screen All Data:', this.props.notes);
-    // }
   }
+  getData = () => {
+    this.props.getAllNotes(this.props.userID);
+  };
+
   renderCategoriesList = () => {
-    const dark = this.props.darkTheme;
     const categories = {};
-    let lastTitle;
-    if (this.props.notes) {
-      lastTitle = this.props.notes[this.props.notes.length - 1];
-    }
     this.props.notes &&
       this.props.notes.map(item => {
         const title = item.title;
@@ -35,61 +33,91 @@ class MenuScreen extends Component {
           categories[title] = 1;
         }
       });
+    return Object.entries(categories);
+  };
 
+  MenuItems = (title, count) => {
+    console.log(title, count);
+    const dark = this.props.darkTheme;
+    let lastTitle;
+    if (this.props.notes) {
+      lastTitle = this.props.notes[this.props.notes.length - 1];
+    }
+    let last = lastTitle.title === title;
     const viewAllNotes = (Title, Count) => {
       this.props.navigation.navigate('NotesScreen', {
         Title,
         Count,
       });
     };
-
-    return Object.entries(categories).map((item, index) => {
-      let last = lastTitle.title === item[0];
-      return (
-        <TouchableOpacity
-          onPress={() => viewAllNotes(item[0], item[1])}
-          style={styles.categoryView}
-          key={index}>
+    return (
+      <TouchableOpacity
+        key={title + count}
+        onPress={() => viewAllNotes(title, count)}
+        style={styles.categoryView}>
+        <Text
+          style={[
+            styles.categoryTitle,
+            styles.categoryTxt,
+            dark && darkTheme.categoryTxt,
+            last && styles.activeTxt,
+            last && dark && darkTheme.activeTxt,
+          ]}>
+          {title}
+        </Text>
+        <View
+          style={[
+            styles.countView,
+            dark && darkTheme.countView,
+            last && styles.activeCountView,
+            last && dark && darkTheme.activeCountView,
+          ]}>
           <Text
             style={[
-              styles.categoryTitle,
+              styles.categoryCount,
               styles.categoryTxt,
-              dark && darkTheme.categoryTxt,
               last && styles.activeTxt,
+              last && dark && darkTheme.activeTxt,
             ]}>
-            {item[0]}
+            {count}
           </Text>
-          <View
-            style={[
-              styles.countView,
-              dark && darkTheme.countView,
-              last && styles.activeCountView,
-            ]}>
-            <Text
-              style={[
-                styles.categoryCount,
-                styles.categoryTxt,
-                last && styles.activeTxt,
-              ]}>
-              {item[1]}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      );
-    });
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   render() {
     const dark = this.props.darkTheme;
     return (
       <View style={[styles.container, dark && darkTheme.conatiner]}>
-        <Text style={styles.headerTxtWrapper}>
+        <Text
+          style={[styles.headerTxtWrapper, dark && darkTheme.headerTxtWrapper]}>
           <Text>My </Text>
           <Text style={[styles.txtColorBlue, dark && darkTheme.txtColorBlue]}>
             Notes
           </Text>
         </Text>
-        <ScrollView>{this.renderCategoriesList()}</ScrollView>
+        {/* <ScrollView>{this.renderCategoriesList()}</ScrollView> */}
+        <View style={styles.flatListView}>
+          {this.props.notes !== undefined && (
+            <FlatList
+              bounces={true}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={item => item.id}
+              data={this.renderCategoriesList()}
+              renderItem={item => this.MenuItems(item.item[0], item.item[1])}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refershing}
+                  onRefresh={() => this.getData()}
+                  tintColor="red"
+                  colors={['green', 'red']}
+                  size={RefreshControl.SIZE.LARGE}
+                />
+              }
+            />
+          )}
+        </View>
         <View style={styles.footer}>
           <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
             <Ionicons
@@ -100,7 +128,7 @@ class MenuScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('AddNoteScreen')}>
-            <Ionicons name="ios-add-circle-sharp" size={70} color="#e62d1d" />
+            <Ionicons name="ios-add-circle-sharp" size={70} color="#e05043" />
           </TouchableOpacity>
         </View>
       </View>
@@ -156,6 +184,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  flatListView: {
+    flex: 1,
+  },
 });
 
 const darkTheme = StyleSheet.create({
@@ -170,6 +201,15 @@ const darkTheme = StyleSheet.create({
   },
   countView: {
     color: 'white',
+  },
+  headerTxtWrapper: {
+    color: '#e05043',
+  },
+  activeTxt: {
+    color: '#e05043',
+  },
+  activeCountView: {
+    backgroundColor: 'rgba(224, 80, 67,0.15)',
   },
 });
 const mapStateToProps = state => ({

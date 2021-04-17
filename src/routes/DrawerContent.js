@@ -163,7 +163,7 @@ const darkTheme = StyleSheet.create({
     color: '#fff',
   },
   preferenceTxt: {
-    color: '#fff',
+    color: '#505187',
   },
   logoutText: {
     color: '#e05043',

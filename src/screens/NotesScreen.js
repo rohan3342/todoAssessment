@@ -3,6 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
+  RefreshControl,
   TouchableOpacity,
   FlatList,
   Alert,
@@ -33,6 +34,7 @@ class NotesScreen extends Component {
   };
 
   getNewData = () => {
+    console.log('refershing', this.state.refershing);
     this.setState({ refershing: true });
     this.props.getAllNotes(this.props.userID);
     this.setState({ refershing: false });
@@ -76,8 +78,15 @@ class NotesScreen extends Component {
                   Data={item.item}
                 />
               )}
-              refreshing={this.state.refershing}
-              onRefresh={this.getNewData}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refershing}
+                  onRefresh={() => this.getNewData()}
+                  tintColor="red"
+                  colors={['green', 'red']}
+                  size={RefreshControl.SIZE.LARGE}
+                />
+              }
             />
           )}
         </View>
