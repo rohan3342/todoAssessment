@@ -4,6 +4,7 @@ import { Avatar, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { logOut } from '../services/Login/action';
 import { useDispatch } from 'react-redux';
+import { TOGGLE_THEME } from '../services/Home/actionType';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function DrawerContent(props) {
@@ -11,6 +12,7 @@ export function DrawerContent(props) {
   const [username, setUsername] = useState('');
   const [isEnable, setIsEnable] = useState(false);
   const isOn = () => {
+    toggleTheme();
     setIsEnable(prevState => !prevState);
   };
 
@@ -18,6 +20,12 @@ export function DrawerContent(props) {
     console.log('SignOut: DrawerContent');
     dispatch(logOut());
     props.navigation.navigate('LoginScreen');
+  };
+
+  const toggleTheme = () => {
+    dispatch({
+      type: TOGGLE_THEME,
+    });
   };
 
   useEffect(() => {
