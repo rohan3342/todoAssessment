@@ -2,6 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
+  Animated,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -9,11 +10,16 @@ import {
 import { useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const NoteCardComp = ({ Data, deleteNote }) => {
+const NoteCardComp = ({ Data, deleteNote, scale, opacity }) => {
   const { createdDate, data, id } = Data;
   const dark = useSelector(state => state.home.darkTheme);
   return (
-    <View style={[styles.container, dark && darkTheme.conatiner]}>
+    <Animated.View
+      style={[
+        styles.container,
+        dark && darkTheme.conatiner,
+        { transform: [{ scale }], opacity },
+      ]}>
       <View style={styles.dateandCross}>
         <Text style={[styles.titleTxt, dark && darkTheme.titleTxt]}>
           {createdDate}
@@ -27,7 +33,7 @@ const NoteCardComp = ({ Data, deleteNote }) => {
         </TouchableOpacity>
       </View>
       <Text style={[styles.dataTxt, dark && darkTheme.dataTxt]}>{data}</Text>
-    </View>
+    </Animated.View>
   );
 };
 

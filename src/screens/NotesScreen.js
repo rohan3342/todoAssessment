@@ -1,99 +1,130 @@
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   RefreshControl,
   TouchableOpacity,
-  FlatList,
+  Animated,
   Alert,
 } from 'react-native';
 import NoteCardComp from '../components/HomeComp/NoteCardComp';
 import HeaderComp from '../components/HomeComp/HeaderComp';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { connect } from 'react-redux';
 import { deleteNote, getAllNotes } from '../services/Home/action';
+import { useDispatch, useSelector } from 'react-redux';
 
-class NotesScreen extends Component {
-  state = { renderFlag: false, refershing: false };
-
-  deleteNote = noteId => {
-    console.log('UserId', this.props.userID);
-    this.props.userID !== undefined &&
+const NotesScreen = props => {
+  const [renderFlag, setRenderFlag] = useState(false);
+  const [refershing, setRefershing] = useState(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const userID = useSelector(state => state.login.userID);
+  const notes = useSelector(state => state.home.notes);
+  const darkTheme = useSelector(state => state.home.darkTheme);
+  const dispatch = useDispatch();
+  const deletenote = noteId => {
+    console.log('UserId', userID);
+    userID !== undefined &&
       Alert.alert('Delete Note', 'Are you sure you want to delete this note', [
         {
           text: 'Yes',
           style: 'destructive',
           onPress: () => {
-            this.props.deleteNote(this.props.userID, noteId);
-            this.setState({ renderFlag: !this.state.renderFlag });
+            dispatch(deleteNote(userID, noteId));
+            setRenderFlag(!renderFlag);
           },
         },
         { text: 'Close', style: 'cancel' },
       ]);
   };
 
-  getNewData = () => {
-    console.log('refershing', this.state.refershing);
-    this.setState({ refershing: true });
-    this.props.getAllNotes(this.props.userID);
-    this.setState({ refershing: false });
+  const getNewData = () => {
+    setRefershing(true);
+    dispatch(getAllNotes(userID));
+    setRefershing(false);
   };
 
-  render() {
-    const dark = this.props.darkTheme;
-    const { Title } = this.props.route.params;
-    let Notes;
-    if (this.props.notes !== undefined) {
-      Notes = this.props.notes.filter(note => note.title === Title);
-    }
-    return (
-      <View style={[styles.container, dark && darkTheme.conatiner]}>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('MenuScreen')}
-          style={styles.backBtn}>
-          <Ionicons
-            name="chevron-back"
-            size={30}
-            color={dark ? '#fff' : '#383972'}
-          />
-          <Text style={[styles.backBtnTxt, dark && darkTheme.backBtnTxt]}>
-            My Notes
-          </Text>
-        </TouchableOpacity>
-        <HeaderComp
-          headerTitle={Title}
-          count={Notes !== undefined ? Notes.length : 0}
+  const ITEM_SIZE = 160;
+  const dark = darkTheme;
+  const { Title } = props.route.params;
+  let Notes;
+  if (notes !== undefined) {
+    Notes = notes.filter(note => note.title === Title);
+  }
+  return (
+    <View style={[styles.container, dark && darkThemeStyle.conatiner]}>
+      <TouchableOpacity
+        onPress={() => props.navigation.navigate('MenuScreen')}
+        style={styles.backBtn}>
+        <Ionicons
+          name="chevron-back"
+          size={30}
+          color={dark ? '#fff' : '#383972'}
         />
-        <View style={styles.flatListView}>
-          {this.props.notes !== undefined && (
-            <FlatList
-              bounces={true}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={item => item.id}
-              data={Notes}
-              renderItem={item => (
+        <Text style={[styles.backBtnTxt, dark && darkThemeStyle.backBtnTxt]}>
+          My Notes
+        </Text>
+      </TouchableOpacity>
+      <HeaderComp
+        headerTitle={Title}
+        count={Notes !== undefined ? Notes.length : 0}
+      />
+      <View style={styles.flatListView}>
+        {notes !== undefined && (
+          <Animated.FlatList
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+              { useNativeDriver: true },
+            )}
+            bounces={true}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => item.id}
+            data={Notes}
+            renderItem={item => {
+              const inputRange = [
+                -1,
+                0,
+                ITEM_SIZE * item.index,
+                ITEM_SIZE * (item.index + 2),
+              ];
+              const opacityInputRange = [
+                -1,
+                0,
+                ITEM_SIZE * item.index,
+                ITEM_SIZE * (item.index + 0.8),
+              ];
+              const scale = scrollY.interpolate({
+                inputRange,
+                outputRange: [1, 1, 1, 0],
+              });
+              const opacity = scrollY.interpolate({
+                inputRange: opacityInputRange,
+                outputRange: [1, 1, 1, 0],
+              });
+              return (
                 <NoteCardComp
-                  deleteNote={value => this.deleteNote(value)}
+                  scale={scale}
+                  opacity={opacity}
+                  deleteNote={value => deletenote(value)}
                   Data={item.item}
                 />
-              )}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refershing}
-                  onRefresh={() => this.getNewData()}
-                  tintColor="red"
-                  colors={['green', 'red']}
-                  size={RefreshControl.SIZE.LARGE}
-                />
-              }
-            />
-          )}
-        </View>
+              );
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refershing}
+                onRefresh={() => getNewData()}
+                tintColor="red"
+                colors={['green', 'red']}
+                size={RefreshControl.SIZE.LARGE}
+              />
+            }
+          />
+        )}
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -118,7 +149,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const darkTheme = StyleSheet.create({
+const darkThemeStyle = StyleSheet.create({
   conatiner: {
     backgroundColor: '#262626',
   },
@@ -127,15 +158,4 @@ const darkTheme = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => ({
-  userID: state.login.userID,
-  notes: state.home.notes,
-  darkTheme: state.home.darkTheme,
-});
-
-const mapDispacthToProps = dispatch => ({
-  deleteNote: (userID, noteID) => dispatch(deleteNote(userID, noteID)),
-  getAllNotes: value => dispatch(getAllNotes(value)),
-});
-
-export default connect(mapStateToProps, mapDispacthToProps)(NotesScreen);
+export default NotesScreen;
