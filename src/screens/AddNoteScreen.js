@@ -32,7 +32,7 @@ class AddNoteScreen extends Component {
   addNote = () => {
     const { title, data } = this.state;
     this.props.addNote(this.props.userID, title, data);
-    this.props.navigation.navigate('MenuScreen');
+    this.props.navigation.goBack('MenuScreen');
   };
 
   render() {
@@ -40,7 +40,7 @@ class AddNoteScreen extends Component {
     return (
       <View style={[styles.container, dark && darkTheme.conatiner]}>
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('MenuScreen')}
+          onPress={() => this.props.navigation.goBack('MenuScreen')}
           style={styles.backBtn}>
           <Ionicons
             name="chevron-back"

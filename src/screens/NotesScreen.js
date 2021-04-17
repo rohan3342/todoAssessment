@@ -54,7 +54,7 @@ const NotesScreen = props => {
   return (
     <View style={[styles.container, dark && darkThemeStyle.conatiner]}>
       <TouchableOpacity
-        onPress={() => props.navigation.navigate('MenuScreen')}
+        onPress={() => props.navigation.goBack('MenuScreen')}
         style={styles.backBtn}>
         <Ionicons
           name="chevron-back"

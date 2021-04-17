@@ -43,7 +43,7 @@ class Routes extends Component {
           <Drawer.Navigator
             drawerContent={props => <DrawerContent {...props} />}
             keyboardHandlingEnabled
-            mode="card"
+            mode="modal"
             initialRouteName={isEmpty ? 'LoginScreen' : 'MenuScreen'}
             screenOptions={{ headerShown: false }}>
             <Drawer.Screen
@@ -51,11 +51,13 @@ class Routes extends Component {
               component={LoginScreen}
               options={{
                 gestureEnabled: false,
+                mode: 'card',
               }}
             />
             <Drawer.Screen
               options={{
                 gestureEnabled: false,
+                mode: 'card',
               }}
               name="SignUpScreen"
               component={SignUpScreen}
