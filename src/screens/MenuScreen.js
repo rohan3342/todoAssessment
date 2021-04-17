@@ -97,13 +97,12 @@ class MenuScreen extends Component {
             Notes
           </Text>
         </Text>
-        {/* <ScrollView>{this.renderCategoriesList()}</ScrollView> */}
         <View style={styles.flatListView}>
           {this.props.notes !== undefined && (
             <FlatList
               bounces={true}
               showsVerticalScrollIndicator={false}
-              keyExtractor={item => item.id}
+              keyExtractor={(_, index) => index}
               data={this.renderCategoriesList()}
               renderItem={item => this.MenuItems(item.item[0], item.item[1])}
               refreshControl={
