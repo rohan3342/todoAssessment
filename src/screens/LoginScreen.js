@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = dispatch => ({
-  authUserSocial: (value, callback) =>
-    dispatch(authUserSocial(value, callback)),
+  authUserSocial: (id, name, callback) =>
+    dispatch(authUserSocial(id, name, callback)),
   signUpSocial: (value, callback) => dispatch(signUpSocial(value, callback)),
   authUser: (value, callback) => dispatch(authUser(value, callback)),
 });
