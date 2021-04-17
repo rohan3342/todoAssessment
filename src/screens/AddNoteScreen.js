@@ -36,17 +36,27 @@ class AddNoteScreen extends Component {
   };
 
   render() {
+    const dark = this.props.darkTheme;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, dark && darkTheme.conatiner]}>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('MenuScreen')}
           style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={30} color="#383972" />
-          <Text style={styles.backBtnTxt}>My Notes</Text>
+          <Ionicons
+            name="chevron-back"
+            size={30}
+            color={dark ? '#fff' : '#383972'}
+          />
+          <Text style={[styles.backBtnTxt, dark && darkTheme.backBtnTxt]}>
+            My Notes
+          </Text>
         </TouchableOpacity>
-        <Text style={styles.headerTxtWrapper}>
+        <Text
+          style={[styles.headerTxtWrapper, dark && darkTheme.headerTxtWrapper]}>
           <Text>Add </Text>
-          <Text style={styles.txtColorBlue}>Notes</Text>
+          <Text style={[styles.txtColorBlue, dark && darkTheme.txtColorBlue]}>
+            Notes
+          </Text>
         </Text>
         <View style={styles.mainContainer}>
           <CustomTextInput
@@ -129,8 +139,24 @@ const styles = StyleSheet.create({
   },
 });
 
+const darkTheme = StyleSheet.create({
+  conatiner: {
+    backgroundColor: '#262626',
+  },
+  backBtnTxt: {
+    color: '#fff',
+  },
+  headerTxtWrapper: {
+    color: '#e05043',
+  },
+  txtColorBlue: {
+    color: '#fff',
+  },
+});
+
 const mapStateToProps = state => ({
   userID: state.login.userID,
+  darkTheme: state.home.darkTheme,
 });
 
 const mapDispacthToProps = dispatch => ({

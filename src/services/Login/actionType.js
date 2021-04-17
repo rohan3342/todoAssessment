@@ -14,3 +14,6 @@ export const SIGNUP = 'SIGNUP';
 
 // To Logout
 export const LOGOUT = 'LOGOUT';
+
+//Set UserID from async storage, if it is undefined after a restart.
+export const SET_USERID = 'SET_USERID_FROM_ASYNCSTOGRAE';

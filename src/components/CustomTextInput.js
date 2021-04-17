@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
 
 const CustomTextInput = ({
   placeholder,
@@ -15,6 +16,7 @@ const CustomTextInput = ({
 }) => {
   const [input, setInput] = useState('');
   const [secure, setSecure] = useState(secureTextEntry);
+  const dark = useSelector(state => state.home.darkTheme);
 
   return (
     <View style={styles.inputViewWrapper}>
@@ -30,7 +32,7 @@ const CustomTextInput = ({
         }}
         placeholderTextColor="#aaa"
         placeholder={placeholder}
-        style={[styles.inputBox, customStyle]}
+        style={[styles.inputBox, dark && darkTheme.inputBox, customStyle]}
         multiline={multiline}
         maxLength={maxLength}
       />
@@ -73,4 +75,13 @@ const styles = StyleSheet.create({
   },
 });
 
+const darkTheme = StyleSheet.create({
+  conatiner: {
+    backgroundColor: '#383972',
+  },
+  inputBox: {
+    backgroundColor: '#262626',
+    color: '#fff',
+  },
+});
 export default CustomTextInput;

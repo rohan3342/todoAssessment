@@ -20,6 +20,7 @@ class MenuScreen extends Component {
     // }
   }
   renderCategoriesList = () => {
+    const dark = this.props.darkTheme;
     const categories = {};
     let lastTitle;
     if (this.props.notes) {
@@ -53,11 +54,17 @@ class MenuScreen extends Component {
             style={[
               styles.categoryTitle,
               styles.categoryTxt,
+              dark && darkTheme.categoryTxt,
               last && styles.activeTxt,
             ]}>
             {item[0]}
           </Text>
-          <View style={[styles.countView, last && styles.activeCountView]}>
+          <View
+            style={[
+              styles.countView,
+              dark && darkTheme.countView,
+              last && styles.activeCountView,
+            ]}>
             <Text
               style={[
                 styles.categoryCount,
@@ -73,16 +80,23 @@ class MenuScreen extends Component {
   };
 
   render() {
+    const dark = this.props.darkTheme;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, dark && darkTheme.conatiner]}>
         <Text style={styles.headerTxtWrapper}>
           <Text>My </Text>
-          <Text style={styles.txtColorBlue}>Notes</Text>
+          <Text style={[styles.txtColorBlue, dark && darkTheme.txtColorBlue]}>
+            Notes
+          </Text>
         </Text>
         <ScrollView>{this.renderCategoriesList()}</ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
-            <Ionicons name="menu-outline" size={70} color="#383972" />
+            <Ionicons
+              name="menu-outline"
+              size={70}
+              color={dark ? '#fff' : '#383972'}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('AddNoteScreen')}>
@@ -144,9 +158,24 @@ const styles = StyleSheet.create({
   },
 });
 
+const darkTheme = StyleSheet.create({
+  conatiner: {
+    backgroundColor: '#262626',
+  },
+  txtColorBlue: {
+    color: 'white',
+  },
+  categoryTxt: {
+    color: 'white',
+  },
+  countView: {
+    color: 'white',
+  },
+});
 const mapStateToProps = state => ({
   userID: state.login.userID,
   notes: state.home.notes,
+  darkTheme: state.home.darkTheme,
 });
 
 const mapDispacthToProps = dispatch => ({

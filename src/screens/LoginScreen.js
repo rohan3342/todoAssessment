@@ -36,10 +36,6 @@ class LoginScreen extends Component {
       Alert.alert('Empty Password', 'Please Fill the Password');
     } else {
       this.Login();
-      this.setState({
-        username: '',
-        password: '',
-      });
     }
   };
 

@@ -3,14 +3,19 @@ import { View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { logOut } from '../services/Login/action';
-import { useDispatch } from 'react-redux';
-import { TOGGLE_THEME } from '../services/Home/actionType';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  TOGGLE_THEME,
+  RESET_THEME_ON_LOGOUT,
+} from '../services/Home/actionType';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function DrawerContent(props) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [isEnable, setIsEnable] = useState(false);
+  const dark = useSelector(state => state.home.darkTheme);
+
   const isOn = () => {
     toggleTheme();
     setIsEnable(prevState => !prevState);
@@ -19,6 +24,9 @@ export function DrawerContent(props) {
   const signOut = () => {
     console.log('SignOut: DrawerContent');
     dispatch(logOut());
+    dispatch({
+      type: RESET_THEME_ON_LOGOUT,
+    });
     props.navigation.navigate('LoginScreen');
   };
 
@@ -40,7 +48,7 @@ export function DrawerContent(props) {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, dark && darkTheme.container]}>
       <View style={styles.drawerContent}>
         <View style={styles.userInfoSection}>
           <View style={styles.avatarView}>
@@ -52,12 +60,16 @@ export function DrawerContent(props) {
             />
           </View>
           <View style={styles.userInfoView}>
-            <Text style={styles.title}>{username}</Text>
+            <Text style={[styles.title, dark && darkTheme.title]}>
+              {username}
+            </Text>
           </View>
         </View>
 
-        <View style={styles.preference}>
-          <Text style={styles.preferenceTxt}>Dark Theme</Text>
+        <View style={[styles.preference, dark && darkTheme.preference]}>
+          <Text style={[styles.preferenceTxt, dark && darkTheme.preferenceTxt]}>
+            Dark Theme
+          </Text>
           <View>
             <Switch
               style={styles.switch}
@@ -72,9 +84,14 @@ export function DrawerContent(props) {
 
       <TouchableOpacity
         onPress={() => signOut()}
-        style={styles.bottomDrawerSection}>
-        <Icon name="logout" color={'#E62D1D'} size={30} />
-        <Text style={styles.logoutText}>Log Out</Text>
+        style={[
+          styles.bottomDrawerSection,
+          dark && darkTheme.bottomDrawerSection,
+        ]}>
+        <Icon name="logout" color={dark ? '#e05043' : '#E62D1D'} size={30} />
+        <Text style={[styles.logoutText, dark && darkTheme.logoutText]}>
+          Log Out
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -90,8 +107,6 @@ const styles = StyleSheet.create({
   userInfoSection: {
     alignItems: 'center',
     paddingVertical: 20,
-    borderBottomColor: '#f4f4f4',
-    borderBottomWidth: 1,
   },
   avatarView: {
     flexDirection: 'row',
@@ -112,10 +127,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 20,
-    borderTopColor: '#f4f4f4',
-    borderTopWidth: 2,
-    borderBottomColor: '#f4f4f4',
-    borderBottomWidth: 2,
+    borderTopColor: '#ddd',
+    borderTopWidth: 1,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   logoutText: {
     fontSize: 20,
@@ -128,10 +143,37 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 16,
+    borderTopColor: '#ddd',
+    borderTopWidth: 1,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   preferenceTxt: {
     fontSize: 18,
     fontWeight: '600',
     color: '#383972',
+  },
+});
+
+const darkTheme = StyleSheet.create({
+  container: {
+    backgroundColor: '#262626',
+  },
+  title: {
+    color: '#fff',
+  },
+  preferenceTxt: {
+    color: '#fff',
+  },
+  logoutText: {
+    color: '#e05043',
+  },
+  bottomDrawerSection: {
+    borderTopColor: 'grey',
+    borderBottomColor: 'grey',
+  },
+  preference: {
+    borderTopColor: 'grey',
+    borderBottomColor: 'grey',
   },
 });

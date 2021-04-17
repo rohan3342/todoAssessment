@@ -4,6 +4,7 @@ import {
   SIGNUP,
   SIGNUP_SOCIAL,
   LOGOUT,
+  SET_USERID,
 } from './actionType';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -51,6 +52,8 @@ export default function LoginReducer(state = initialState, action) {
       };
     case LOGOUT:
       return { userID: undefined };
+    case SET_USERID:
+      return { userID: action.payload };
     default:
       return state;
   }

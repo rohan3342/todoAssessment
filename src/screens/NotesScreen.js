@@ -18,17 +18,18 @@ class NotesScreen extends Component {
 
   deleteNote = noteId => {
     console.log('UserId', this.props.userID);
-    Alert.alert('Delete Note', 'Are you sure you want to delete this note', [
-      {
-        text: 'Yes',
-        style: 'destructive',
-        onPress: () => {
-          this.props.deleteNote(this.props.userID, noteId);
-          this.setState({ renderFlag: !this.state.renderFlag });
+    this.props.userID !== undefined &&
+      Alert.alert('Delete Note', 'Are you sure you want to delete this note', [
+        {
+          text: 'Yes',
+          style: 'destructive',
+          onPress: () => {
+            this.props.deleteNote(this.props.userID, noteId);
+            this.setState({ renderFlag: !this.state.renderFlag });
+          },
         },
-      },
-      { text: 'Close', style: 'cancel' },
-    ]);
+        { text: 'Close', style: 'cancel' },
+      ]);
   };
 
   getNewData = () => {
@@ -38,18 +39,25 @@ class NotesScreen extends Component {
   };
 
   render() {
+    const dark = this.props.darkTheme;
     const { Title } = this.props.route.params;
     let Notes;
     if (this.props.notes !== undefined) {
       Notes = this.props.notes.filter(note => note.title === Title);
     }
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, dark && darkTheme.conatiner]}>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('MenuScreen')}
           style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={30} color="#383972" />
-          <Text style={styles.backBtnTxt}>My Notes</Text>
+          <Ionicons
+            name="chevron-back"
+            size={30}
+            color={dark ? '#fff' : '#383972'}
+          />
+          <Text style={[styles.backBtnTxt, dark && darkTheme.backBtnTxt]}>
+            My Notes
+          </Text>
         </TouchableOpacity>
         <HeaderComp
           headerTitle={Title}
@@ -101,9 +109,19 @@ const styles = StyleSheet.create({
   },
 });
 
+const darkTheme = StyleSheet.create({
+  conatiner: {
+    backgroundColor: '#262626',
+  },
+  backBtnTxt: {
+    color: '#fff',
+  },
+});
+
 const mapStateToProps = state => ({
   userID: state.login.userID,
   notes: state.home.notes,
+  darkTheme: state.home.darkTheme,
 });
 
 const mapDispacthToProps = dispatch => ({

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { connect } from 'react-redux';
 import { getAllNotes } from '../services/Home/action';
+import { SET_USERID } from '../services/Login/actionType';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import NotesScreen from '../screens/NotesScreen';
@@ -23,10 +24,11 @@ class Routes extends Component {
     this.checkStorage();
   }
   checkStorage = async () => {
-    const data = await AsyncStorage.getItem('@user_id');
-    if (data !== null) {
-      console.log(data);
-      this.props.getAllNotes(data);
+    const userID = await AsyncStorage.getItem('@user_id');
+    if (userID !== null) {
+      console.log('AsyncStorage UserID: ', userID);
+      this.props.setUserId(userID);
+      this.props.getAllNotes(userID);
       this.setState({ isEmpty: false, isLoaded: true });
     } else {
       this.setState({ isLoaded: true });
@@ -74,6 +76,7 @@ class Routes extends Component {
 
 const mapDispatchToProps = dispatch => ({
   getAllNotes: value => dispatch(getAllNotes(value)),
+  setUserId: value => dispatch({ type: SET_USERID, payload: value }),
 });
 
 export default connect(null, mapDispatchToProps)(Routes);
