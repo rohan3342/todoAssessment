@@ -5,15 +5,20 @@ import Routes from './src/routes/Routes';
 class App extends Component {
   render() {
     const dark = this.props.darkTheme;
-    if (Platform.OS === 'ios' && dark) {
+    if (dark) {
       StatusBar.setBarStyle('light-content');
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor('#262626');
+        StatusBar.setTranslucent(true);
+      }
     } else {
       StatusBar.setBarStyle('dark-content');
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor('#fff');
+        StatusBar.setTranslucent(true);
+      }
     }
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('#262626');
-      StatusBar.setTranslucent(true);
-    }
+
     return (
       <SafeAreaView style={[styles.container, dark && darkTheme.conatiner]}>
         <Routes />
@@ -25,6 +30,12 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    ...Platform.select({
+      android: {
+        paddingTop: 40,
+      },
+    }),
   },
 });
 const darkTheme = StyleSheet.create({
