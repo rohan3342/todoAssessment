@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialState = {
   userID: undefined,
+  userName: undefined,
 };
 
 export default function LoginReducer(state = initialState, action) {
@@ -19,19 +20,35 @@ export default function LoginReducer(state = initialState, action) {
       action.type === 'AUTH_USER_SOCIAL' ||
       action.type === 'SIGNUP_SOCIAL')
   ) {
-    const userID = action.payload;
-    storeData(userID);
+    const { id, name } = action.payload;
+    storeData(id, name);
   }
 
   switch (action.type) {
     case AUTH_USER:
-      return { ...state, userID: action.payload };
+      return {
+        ...state,
+        userID: action.payload.id,
+        userName: action.payload.name,
+      };
     case SIGNUP:
-      return { ...state, userID: action.payload };
+      return {
+        ...state,
+        userID: action.payload.id,
+        userName: action.payload.name,
+      };
     case AUTH_USER_SOCIAL:
-      return { ...state, userID: action.payload };
+      return {
+        ...state,
+        userID: action.payload.id,
+        userName: action.payload.name,
+      };
     case SIGNUP_SOCIAL:
-      return { ...state, userID: action.payload };
+      return {
+        ...state,
+        userID: action.payload.id,
+        userName: action.payload.name,
+      };
     case LOGOUT:
       return { userID: undefined };
     default:
@@ -39,9 +56,12 @@ export default function LoginReducer(state = initialState, action) {
   }
 }
 
-const storeData = async userID => {
+const storeData = async (userID, userName) => {
   try {
-    await AsyncStorage.setItem('@user_id', userID.toString());
+    await AsyncStorage.multiSet([
+      ['@user_id', userID.toString()],
+      ['@user_name', userName.toString()],
+    ]);
     console.log('UserID Stored In AsyncStorage');
   } catch (e) {
     console.log('AsyncStorage: HomeReducer =>', e);

@@ -38,7 +38,11 @@ class LoginScreen extends Component {
         this.props.signUpSocial(userInfo, signUpSocialCallback);
       }
     };
-    this.props.authUserSocial(userInfo.socialId, authUserSocialCallback);
+    this.props.authUserSocial(
+      userInfo.socialId,
+      userInfo.name,
+      authUserSocialCallback,
+    );
   };
 
   Login = async () => {
