@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import {
-  Avatar,
-  Drawer,
-  Text,
-  TouchableRipple,
-  Switch,
-} from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import { Avatar, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { logOut } from '../services/Login/action';
 import { useDispatch } from 'react-redux';
@@ -15,6 +9,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export function DrawerContent(props) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
+  const [isEnable, setIsEnable] = useState(false);
+  const isOn = () => {
+    setIsEnable(prevState => !prevState);
+  };
+
   const signOut = () => {
     console.log('SignOut: DrawerContent');
     dispatch(logOut());
@@ -49,16 +48,18 @@ export function DrawerContent(props) {
           </View>
         </View>
 
-        <Drawer.Section>
-          <TouchableRipple>
-            <View style={styles.preference}>
-              <Text style={styles.preferenceTxt}>Dark Theme</Text>
-              <View pointerEvents="none">
-                <Switch />
-              </View>
-            </View>
-          </TouchableRipple>
-        </Drawer.Section>
+        <View style={styles.preference}>
+          <Text style={styles.preferenceTxt}>Dark Theme</Text>
+          <View>
+            <Switch
+              style={styles.switch}
+              trackColor={{ true: '#383972' }}
+              thumbColor={isEnable ? '#fff' : '#ccc'}
+              onValueChange={isOn}
+              value={isEnable}
+            />
+          </View>
+        </View>
       </View>
 
       <TouchableOpacity
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   preferenceTxt: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: '#383972',
   },
