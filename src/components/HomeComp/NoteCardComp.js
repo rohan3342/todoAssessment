@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useSelector } from 'react-redux';
+import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const NoteCardComp = ({ Data, deleteNote, scale, opacity }) => {
@@ -22,7 +23,7 @@ const NoteCardComp = ({ Data, deleteNote, scale, opacity }) => {
       ]}>
       <View style={styles.dateandCross}>
         <Text style={[styles.titleTxt, dark && darkTheme.titleTxt]}>
-          {createdDate}
+          {Moment(createdDate).format('MMMM Do YYYY, h:mm a')}
         </Text>
         <TouchableOpacity onPress={() => deleteNote(id)}>
           <Ionicons
