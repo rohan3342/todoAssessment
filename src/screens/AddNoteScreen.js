@@ -4,6 +4,10 @@ import CustomTextInput from '../components/CustomTextInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { addNote } from '../services/Home/action';
 import { connect } from 'react-redux';
+import { _DarkTheme, _LightTheme, DarkTheme } from '../utils/Theme';
+
+const { d_bgColor, d_headerColor, d_txtColor, d_icon } = _DarkTheme;
+const { l_bgColor, l_headerColor, l_headerColor2 } = _LightTheme;
 
 class AddNoteScreen extends Component {
   state = {
@@ -22,10 +26,6 @@ class AddNoteScreen extends Component {
       Alert.alert('Empty Note', 'Please Fill the Note');
     } else {
       this.addNote();
-      this.setState({
-        username: '',
-        password: '',
-      });
     }
   };
 
@@ -36,29 +36,37 @@ class AddNoteScreen extends Component {
   };
 
   render() {
-    const dark = this.props.darkTheme;
+    this.props.dark;
     return (
-      <View style={[styles.container, dark && darkTheme.conatiner]}>
+      <View style={[styles.container, DarkTheme() && darkTheme.conatiner]}>
         <TouchableOpacity
           onPress={() => this.props.navigation.goBack('MenuScreen')}
           style={styles.backBtn}>
           <Ionicons
             name="chevron-back"
             size={30}
-            color={dark ? '#fff' : '#383972'}
+            color={DarkTheme() ? l_bgColor : d_icon}
           />
-          <Text style={[styles.backBtnTxt, dark && darkTheme.backBtnTxt]}>
+          <Text
+            style={[styles.backBtnTxt, DarkTheme() && darkTheme.backBtnTxt]}>
             My Notes
           </Text>
         </TouchableOpacity>
         <Text
-          style={[styles.headerTxtWrapper, dark && darkTheme.headerTxtWrapper]}>
+          style={[
+            styles.headerTxtWrapper,
+            DarkTheme() && darkTheme.headerTxtWrapper,
+          ]}>
           <Text>Add </Text>
-          <Text style={[styles.txtColorBlue, dark && darkTheme.txtColorBlue]}>
+          <Text
+            style={[
+              styles.txtColorBlue,
+              DarkTheme() && darkTheme.txtColorBlue,
+            ]}>
             Notes
           </Text>
         </Text>
-        <View style={styles.mainContainer}>
+        <View style={styles.body}>
           <CustomTextInput
             placeholder="Title"
             keyboardType="default"
@@ -73,12 +81,12 @@ class AddNoteScreen extends Component {
             getInput={text => this.getData(text)}
           />
         </View>
-        <View style={styles.addBtnWrapper}>
+        <View style={styles.addBtnView}>
           <TouchableOpacity
             onPress={() => this.validateText()}
             style={styles.addBtn}>
             <Ionicons name="ios-add-circle-outline" size={30} color="#fff" />
-            <Text style={styles.addBtnText}>Add Note</Text>
+            <Text style={styles.addBtnTxt}>Add Note</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -89,7 +97,7 @@ class AddNoteScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: l_bgColor,
     paddingHorizontal: 30,
     paddingTop: 30,
   },
@@ -101,62 +109,48 @@ const styles = StyleSheet.create({
   },
   backBtnTxt: {
     fontSize: 16,
-    color: '#383972',
+    color: l_headerColor2,
   },
   headerTxtWrapper: {
     marginVertical: 20,
     fontSize: 50,
     fontWeight: 'bold',
-    color: '#E62D1D',
+    color: l_headerColor,
     letterSpacing: 1.5,
   },
-  txtColorBlue: {
-    color: '#383972',
-  },
-  mainContainer: {
-    marginTop: 30,
-  },
-  dataTxt: {
-    height: 200,
-  },
-  addBtnWrapper: {
+  txtColorBlue: { color: l_headerColor2 },
+  body: { marginTop: 30 },
+  dataTxt: { height: 200 },
+  addBtnView: {
     flex: 0.9,
     justifyContent: 'flex-end',
   },
   addBtn: {
     flexDirection: 'row',
-    backgroundColor: '#383972',
+    backgroundColor: l_headerColor2,
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
   },
-  addBtnText: {
+  addBtnTxt: {
     marginLeft: 10,
-    color: 'white',
+    color: l_bgColor,
     fontSize: 20,
     fontWeight: '600',
   },
 });
 
 const darkTheme = StyleSheet.create({
-  conatiner: {
-    backgroundColor: '#262626',
-  },
-  backBtnTxt: {
-    color: '#fff',
-  },
-  headerTxtWrapper: {
-    color: '#e05043',
-  },
-  txtColorBlue: {
-    color: '#fff',
-  },
+  conatiner: { backgroundColor: d_bgColor },
+  backBtnTxt: { color: d_txtColor },
+  headerTxtWrapper: { color: d_headerColor },
+  txtColorBlue: { color: d_txtColor },
 });
 
 const mapStateToProps = state => ({
   userID: state.login.userID,
-  darkTheme: state.home.darkTheme,
+  dark: state.home.darkTheme,
 });
 
 const mapDispacthToProps = dispatch => ({

@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import { _DarkTheme, _LightTheme, DarkTheme } from '../utils/Theme';
+
+const { d_bgColor, d_txtColor, d_icon } = _DarkTheme;
+const { l_bgColor } = _LightTheme;
 
 const CustomTextInput = ({
   placeholder,
@@ -16,7 +19,6 @@ const CustomTextInput = ({
 }) => {
   const [input, setInput] = useState('');
   const [secure, setSecure] = useState(secureTextEntry);
-  const dark = useSelector(state => state.home.darkTheme);
 
   return (
     <View style={styles.inputViewWrapper}>
@@ -32,7 +34,11 @@ const CustomTextInput = ({
         }}
         placeholderTextColor="#aaa"
         placeholder={placeholder}
-        style={[styles.inputBox, dark && darkTheme.inputBox, customStyle]}
+        style={[
+          styles.inputBox,
+          DarkTheme() && darkTheme.inputBox,
+          customStyle,
+        ]}
         multiline={multiline}
         maxLength={maxLength}
       />
@@ -68,7 +74,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     height: 55,
     width: '90%',
-    backgroundColor: '#fff',
+    backgroundColor: l_bgColor,
     fontSize: 18,
     padding: 10,
     color: '#000',
@@ -76,12 +82,10 @@ const styles = StyleSheet.create({
 });
 
 const darkTheme = StyleSheet.create({
-  conatiner: {
-    backgroundColor: '#383972',
-  },
+  conatiner: { backgroundColor: d_icon },
   inputBox: {
-    backgroundColor: '#262626',
-    color: '#fff',
+    backgroundColor: d_bgColor,
+    color: d_txtColor,
   },
 });
 export default CustomTextInput;

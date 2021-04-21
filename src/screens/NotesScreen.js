@@ -13,6 +13,10 @@ import HeaderComp from '../components/HomeComp/HeaderComp';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteNote, getAllNotes } from '../services/Home/action';
 import { useDispatch, useSelector } from 'react-redux';
+import { _DarkTheme, _LightTheme, DarkTheme } from '../utils/Theme';
+
+const { d_bgColor, d_txtColor, d_icon } = _DarkTheme;
+const { l_bgColor, l_headerColor2 } = _LightTheme;
 
 const NotesScreen = props => {
   const [renderFlag, setRenderFlag] = useState(false);
@@ -20,10 +24,12 @@ const NotesScreen = props => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const userID = useSelector(state => state.login.userID);
   const notes = useSelector(state => state.home.notes);
-  const darkTheme = useSelector(state => state.home.darkTheme);
+
+  // eslint-disable-next-line no-unused-vars
+  const dark = useSelector(state => state.home.darkTheme);
   const dispatch = useDispatch();
+
   const deletenote = noteId => {
-    console.log('UserId', userID);
     userID !== undefined &&
       Alert.alert('Delete Note', 'Are you sure you want to delete this note', [
         {
@@ -45,30 +51,24 @@ const NotesScreen = props => {
   };
 
   const ITEM_SIZE = 160;
-  const dark = darkTheme;
   const { Title } = props.route.params;
-  let Notes;
-  if (notes !== undefined) {
-    Notes = notes.filter(note => note.title === Title);
-  }
+  let Notes = notes?.filter(note => note.title === Title);
+
   return (
-    <View style={[styles.container, dark && darkThemeStyle.conatiner]}>
+    <View style={[styles.container, DarkTheme() && darkTheme.conatiner]}>
       <TouchableOpacity
         onPress={() => props.navigation.goBack('MenuScreen')}
         style={styles.backBtn}>
         <Ionicons
           name="chevron-back"
           size={30}
-          color={dark ? '#fff' : '#383972'}
+          color={DarkTheme() ? l_bgColor : d_icon}
         />
-        <Text style={[styles.backBtnTxt, dark && darkThemeStyle.backBtnTxt]}>
+        <Text style={[styles.backBtnTxt, DarkTheme() && darkTheme.backBtnTxt]}>
           My Notes
         </Text>
       </TouchableOpacity>
-      <HeaderComp
-        headerTitle={Title}
-        count={Notes !== undefined ? Notes.length : 0}
-      />
+      <HeaderComp headerTitle={Title} count={Notes?.length} />
       <View style={styles.flatListView}>
         {notes !== undefined && (
           <Animated.FlatList
@@ -131,9 +131,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: l_bgColor,
   },
-  notesContainer: {},
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -142,20 +141,14 @@ const styles = StyleSheet.create({
   },
   backBtnTxt: {
     fontSize: 16,
-    color: '#383972',
+    color: l_headerColor2,
   },
-  flatListView: {
-    flex: 1,
-  },
+  flatListView: { flex: 1 },
 });
 
-const darkThemeStyle = StyleSheet.create({
-  conatiner: {
-    backgroundColor: '#262626',
-  },
-  backBtnTxt: {
-    color: '#fff',
-  },
+const darkTheme = StyleSheet.create({
+  conatiner: { backgroundColor: d_bgColor },
+  backBtnTxt: { color: d_txtColor },
 });
 
 export default NotesScreen;

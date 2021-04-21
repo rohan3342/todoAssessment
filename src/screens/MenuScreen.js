@@ -10,76 +10,84 @@ import {
 import { connect } from 'react-redux';
 import { getAllNotes } from '../services/Home/action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { _DarkTheme, _LightTheme, DarkTheme } from '../utils/Theme';
+
+const {
+  d_bgColor,
+  d_headerColor,
+  d_txtColor,
+  d_activeCountBGColor,
+} = _DarkTheme;
+
+const {
+  l_bgColor,
+  l_headerColor,
+  l_headerColor2,
+  l_activeCountBGColor,
+} = _LightTheme;
 
 class MenuScreen extends Component {
   state = { refershing: false, test: false };
+
   componentDidUpdate(prevProps) {
-    if (prevProps.userID !== this.props.userID) {
-      this.getData();
-    }
+    prevProps.userID !== this.props.userID && this.getData();
   }
-  getData = () => {
-    this.props.getAllNotes(this.props.userID);
-  };
+
+  getData = () => this.props.getAllNotes(this.props.userID);
 
   renderCategoriesList = () => {
+    const notes = this.props.notes;
     const categories = {};
-    this.props.notes &&
-      this.props.notes.map(item => {
-        const title = item.title;
-        if (categories.hasOwnProperty(item.title)) {
-          categories[title] += 1;
-        } else {
-          categories[title] = 1;
-        }
-      });
+    notes?.map(item => {
+      const title = item.title;
+      categories.hasOwnProperty(item.title)
+        ? (categories[title] += 1)
+        : (categories[title] = 1);
+    });
     return Object.entries(categories);
   };
 
-  MenuItems = (title, count) => {
-    console.log(title, count);
-    const dark = this.props.darkTheme;
-    let lastTitle;
-    if (this.props.notes) {
-      lastTitle = this.props.notes[this.props.notes.length - 1];
-    }
-    let last = lastTitle.title === title;
-    const viewAllNotes = (Title, Count) => {
+  MenuItems = (TITLE, COUNT) => {
+    const notes = this.props.notes;
+    const { title } = notes && this.props.notes[this.props.notes.length - 1];
+    const last = title === TITLE;
+
+    const viewAllNotes = (Title, Count) =>
       this.props.navigation.navigate('NotesScreen', {
         Title,
         Count,
       });
-    };
+
     return (
       <TouchableOpacity
-        key={title + count}
-        onPress={() => viewAllNotes(title, count)}
+        key={TITLE + COUNT}
+        onPress={() => viewAllNotes(TITLE, COUNT)}
         style={styles.categoryView}>
         <Text
           style={[
             styles.categoryTitle,
             styles.categoryTxt,
-            dark && darkTheme.categoryTxt,
+            DarkTheme() && darkTheme.categoryTxt,
             last && styles.activeTxt,
-            last && dark && darkTheme.activeTxt,
+            last && DarkTheme() && darkTheme.activeTxt,
           ]}>
-          {title}
+          {TITLE}
         </Text>
         <View
           style={[
             styles.countView,
-            dark && darkTheme.countView,
+            DarkTheme() && darkTheme.countView,
             last && styles.activeCountView,
-            last && dark && darkTheme.activeCountView,
+            last && DarkTheme() && darkTheme.activeCountView,
           ]}>
           <Text
             style={[
               styles.categoryCount,
               styles.categoryTxt,
               last && styles.activeTxt,
-              last && dark && darkTheme.activeTxt,
+              last && DarkTheme() && darkTheme.activeTxt,
             ]}>
-            {count}
+            {COUNT}
           </Text>
         </View>
       </TouchableOpacity>
@@ -87,13 +95,20 @@ class MenuScreen extends Component {
   };
 
   render() {
-    const dark = this.props.darkTheme;
+    this.props.dark;
     return (
-      <View style={[styles.container, dark && darkTheme.conatiner]}>
+      <View style={[styles.container, DarkTheme() && darkTheme.conatiner]}>
         <Text
-          style={[styles.headerTxtWrapper, dark && darkTheme.headerTxtWrapper]}>
+          style={[
+            styles.headerTxtWrapper,
+            DarkTheme() && darkTheme.headerTxtWrapper,
+          ]}>
           <Text>My </Text>
-          <Text style={[styles.txtColorBlue, dark && darkTheme.txtColorBlue]}>
+          <Text
+            style={[
+              styles.txtColorBlue,
+              DarkTheme() && darkTheme.txtColorBlue,
+            ]}>
             Notes
           </Text>
         </Text>
@@ -122,7 +137,7 @@ class MenuScreen extends Component {
             <Ionicons
               name="menu-outline"
               size={70}
-              color={dark ? '#fff' : '#383972'}
+              color={DarkTheme() ? '#fff' : '#383972'}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -140,16 +155,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 30,
-    backgroundColor: 'white',
+    backgroundColor: l_bgColor,
   },
   headerTxtWrapper: {
     fontSize: 50,
     fontWeight: 'bold',
-    color: '#E62D1D',
+    color: l_headerColor,
     letterSpacing: 1.5,
   },
   txtColorBlue: {
-    color: '#383972',
+    color: l_headerColor2,
   },
   categoryView: {
     flexDirection: 'row',
@@ -160,14 +175,14 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   categoryTxt: {
-    color: '#383972',
+    color: l_headerColor2,
     fontWeight: '600',
   },
   categoryCount: {
     fontSize: 36,
   },
   activeTxt: {
-    color: '#e62d1d',
+    color: l_headerColor,
   },
   countView: {
     height: 50,
@@ -176,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeCountView: {
-    backgroundColor: 'rgba(230,45,29, 0.15)',
+    backgroundColor: l_activeCountBGColor,
     borderRadius: 25,
   },
   footer: {
@@ -190,31 +205,32 @@ const styles = StyleSheet.create({
 
 const darkTheme = StyleSheet.create({
   conatiner: {
-    backgroundColor: '#262626',
+    backgroundColor: d_bgColor,
   },
   txtColorBlue: {
-    color: 'white',
+    color: d_txtColor,
   },
   categoryTxt: {
-    color: 'white',
+    color: d_txtColor,
   },
   countView: {
-    color: 'white',
+    color: d_txtColor,
   },
   headerTxtWrapper: {
-    color: '#e05043',
+    color: d_headerColor,
   },
   activeTxt: {
-    color: '#e05043',
+    color: d_headerColor,
   },
   activeCountView: {
-    backgroundColor: 'rgba(224, 80, 67,0.15)',
+    backgroundColor: d_activeCountBGColor,
   },
 });
+
 const mapStateToProps = state => ({
   userID: state.login.userID,
   notes: state.home.notes,
-  darkTheme: state.home.darkTheme,
+  dark: state.home.darkTheme,
 });
 
 const mapDispacthToProps = dispatch => ({
